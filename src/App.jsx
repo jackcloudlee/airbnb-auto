@@ -759,6 +759,7 @@ function LoginScreen() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPw, setShowPw] = useState(false);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -823,15 +824,29 @@ function LoginScreen() {
           </div>
           <div>
             <label style={labelStyle}>비밀번호</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={fieldStyle}
-              placeholder="비밀번호 입력"
-              autoComplete="current-password"
-            />
+            <div style={{ position: "relative" }}>
+              <input
+                type={showPw ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ ...fieldStyle, paddingRight: 48 }}
+                placeholder="비밀번호 입력"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPw(v => !v)}
+                style={{
+                  position: "absolute", right: 12, top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none", border: "none", cursor: "pointer",
+                  fontSize: 18, color: "#6b7280", padding: 0,
+                }}
+              >
+                {showPw ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           <button
             type="submit"
