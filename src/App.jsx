@@ -766,7 +766,7 @@ function LoginScreen() {
     setError("");
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (err) setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+    if (err) setError(`[오류] ${err.message} (code: ${err.status})`);
   }
 
   const fieldStyle = {
