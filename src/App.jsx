@@ -760,6 +760,16 @@ function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPw, setShowPw] = useState(false);
+  const [diagMsg, setDiagMsg] = useState("");
+
+  useEffect(() => {
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    setDiagMsg(`URL체크: "${url}" (${typeof url})`);
+    fetch("https://turjhleywuqfeezzmezk.supabase.co/auth/v1/health")
+      .then(r => r.json())
+      .then(() => setDiagMsg(prev => prev + " | fetch직접: ✅"))
+      .catch(e => setDiagMsg(prev => prev + " | fetch직접: ❌" + e.message));
+  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -801,6 +811,7 @@ function LoginScreen() {
       }}
     >
       <div style={{ ...cardStyle, width: "100%", maxWidth: 420, padding: 36 }}>
+        {diagMsg && <div style={{ fontSize: 11, color: "#6b7280", background: "#f3f4f6", padding: "6px 10px", borderRadius: 8, marginBottom: 12, wordBreak: "break-all" }}>{diagMsg}</div>}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>🏠</div>
           <h1 style={{ fontSize: 26, fontWeight: 800, color: "#1e293b", margin: "0 0 6px" }}>숙소 운영보드</h1>
