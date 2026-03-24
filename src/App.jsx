@@ -760,21 +760,6 @@ function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPw, setShowPw] = useState(false);
-  const [diagMsg, setDiagMsg] = useState("");
-
-  useEffect(() => {
-    const key = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
-    const keyLen = key.length;
-    const hasNewline = key.includes("\n") || key.includes("\r");
-    setDiagMsg(`KEY길이:${keyLen} 줄바꿈:${hasNewline}`);
-    // apikey 헤더 포함 fetch 테스트
-    fetch("https://turjhleywuqfeezzmezk.supabase.co/auth/v1/health", {
-      headers: { apikey: key, Authorization: `Bearer ${key}` }
-    })
-      .then(r => r.json())
-      .then(() => setDiagMsg(prev => prev + " | 헤더포함: ✅"))
-      .catch(e => setDiagMsg(prev => prev + " | 헤더포함: ❌ " + e.message));
-  }, []);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -816,8 +801,7 @@ function LoginScreen() {
       }}
     >
       <div style={{ ...cardStyle, width: "100%", maxWidth: 420, padding: 36 }}>
-        {diagMsg && <div style={{ fontSize: 11, color: "#6b7280", background: "#f3f4f6", padding: "6px 10px", borderRadius: 8, marginBottom: 12, wordBreak: "break-all" }}>{diagMsg}</div>}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
+<div style={{ textAlign: "center", marginBottom: 32 }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>🏠</div>
           <h1 style={{ fontSize: 26, fontWeight: 800, color: "#1e293b", margin: "0 0 6px" }}>숙소 운영보드</h1>
           <p style={{ color: "#64748b", fontSize: 14, margin: 0 }}>로그인하여 계속하세요</p>
