@@ -873,9 +873,7 @@ function LoginScreen() {
 // ── InstallBanner ─────────────────────────────────────────────────────────────
 function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem("installBannerDismissed") === "1"
-  );
+  const [dismissed, setDismissed] = useState(false);
   const isInstalled = window.matchMedia("(display-mode: standalone)").matches
     || window.navigator.standalone === true;
 
@@ -897,7 +895,6 @@ function InstallBanner() {
   }
 
   function handleDismiss() {
-    localStorage.setItem("installBannerDismissed", "1");
     setDismissed(true);
   }
 
