@@ -763,12 +763,17 @@ function LoginScreen() {
   const [diagMsg, setDiagMsg] = useState("");
 
   useEffect(() => {
-    const url = import.meta.env.VITE_SUPABASE_URL;
-    setDiagMsg(`URL체크: "${url}" (${typeof url})`);
-    fetch("https://turjhleywuqfeezzmezk.supabase.co/auth/v1/health")
+    const key = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+    const keyLen = key.length;
+    const hasNewline = key.includes("\n") || key.includes("\r");
+    setDiagMsg(`KEY길이:${keyLen} 줄바꿈:${hasNewline}`);
+    // apikey 헤더 포함 fetch 테스트
+    fetch("https://turjhleywuqfeezzmezk.supabase.co/auth/v1/health", {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
+    })
       .then(r => r.json())
-      .then(() => setDiagMsg(prev => prev + " | fetch직접: ✅"))
-      .catch(e => setDiagMsg(prev => prev + " | fetch직접: ❌" + e.message));
+      .then(() => setDiagMsg(prev => prev + " | 헤더포함: ✅"))
+      .catch(e => setDiagMsg(prev => prev + " | 헤더포함: ❌ " + e.message));
   }, []);
 
   async function handleLogin(e) {
