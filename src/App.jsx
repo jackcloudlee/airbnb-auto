@@ -870,6 +870,72 @@ function LoginScreen() {
   );
 }
 
+// ── InstallBanner ─────────────────────────────────────────────────────────────
+function InstallBanner() {
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [dismissed, setDismissed] = useState(
+    () => localStorage.getItem("installBannerDismissed") === "1"
+  );
+  const isInstalled = window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true;
+
+  useEffect(() => {
+    const handler = (e) => { e.preventDefault(); setDeferredPrompt(e); };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  if (isInstalled || dismissed) return null;
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  function handleInstall() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => setDeferredPrompt(null));
+    }
+  }
+
+  function handleDismiss() {
+    localStorage.setItem("installBannerDismissed", "1");
+    setDismissed(true);
+  }
+
+  return (
+    <div style={{
+      background: "#0f172a", color: "#fff",
+      borderRadius: 12, padding: "12px 16px",
+      marginBottom: 16, display: "flex",
+      alignItems: "center", justifyContent: "space-between", gap: 12,
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ fontSize: 24 }}>📲</span>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 14 }}>홈 화면에 앱 추가</div>
+          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
+            {isIOS
+              ? "Safari 하단 공유(↑) → 홈 화면에 추가"
+              : "설치하면 앱처럼 바로 실행할 수 있어요"}
+          </div>
+        </div>
+      </div>
+      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+        {!isIOS && deferredPrompt && (
+          <button onClick={handleInstall} style={{
+            background: "#3b82f6", color: "#fff", border: "none",
+            borderRadius: 8, padding: "8px 14px", fontSize: 13,
+            fontWeight: 600, cursor: "pointer",
+          }}>설치</button>
+        )}
+        <button onClick={handleDismiss} style={{
+          background: "transparent", color: "#94a3b8", border: "1px solid #334155",
+          borderRadius: 8, padding: "8px 12px", fontSize: 13, cursor: "pointer",
+        }}>닫기</button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main App ─────────────────────────────────────────────────────────────────
 export default function App() {
   const isMobile = useIsMobile();
@@ -1370,6 +1436,8 @@ export default function App() {
         </div>
 
         {syncMessage ? <StatusBox text={syncMessage} tone={syncTone} /> : null}
+
+        <InstallBanner />
 
         {/* iCal Sync Card */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
