@@ -14,6 +14,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
   },
   global: {
-    fetch: (...args) => fetch(...args),
+    fetch: globalThis.fetch.bind(globalThis),
+    headers: {
+      "X-Client-Info": "supabase-js/2.46.2",
+    },
   },
 });
