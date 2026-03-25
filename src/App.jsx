@@ -14,6 +14,19 @@ const BOOKING_META = { name: "Booking", bg: "#111827", color: "#ffffff" };
 
 const WEEKDAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
 const DAY_GAP = 10;
+
+// 한국 공휴일 (YYYY/M/D)
+const KOREAN_HOLIDAYS = new Set([
+  // 2025
+  "2025/1/1","2025/1/28","2025/1/29","2025/1/30","2025/3/1","2025/5/5",
+  "2025/6/6","2025/8/15","2025/10/3","2025/10/5","2025/10/6","2025/10/7","2025/10/9","2025/12/25",
+  // 2026
+  "2026/1/1","2026/2/17","2026/2/18","2026/2/19","2026/3/1","2026/5/5","2026/5/24",
+  "2026/6/6","2026/8/15","2026/10/1","2026/10/2","2026/10/3","2026/10/9","2026/12/25",
+  // 2027
+  "2027/1/1","2027/2/6","2027/2/7","2027/2/8","2027/3/1","2027/5/5","2027/5/13",
+  "2027/6/6","2027/8/15","2027/9/24","2027/9/25","2027/9/26","2027/10/3","2027/10/9","2027/12/25",
+]);
 const WEEK_BASE_HEIGHT = 118;
 const BAR_HEIGHT = 30;
 const BAR_TOP = 40;
@@ -1439,13 +1452,13 @@ export default function App() {
           <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "2.2fr 0.9fr", gap: 16 }}>
             <div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: DAY_GAP, marginBottom: 10 }}>
-                {WEEKDAY_LABELS.map((weekday) => (
+                {WEEKDAY_LABELS.map((weekday, wi) => (
                   <div
                     key={weekday}
                     style={{
                       textAlign: "center",
                       fontWeight: 800,
-                      color: "#64748b",
+                      color: wi === 0 ? "#dc2626" : wi === 6 ? "#2563eb" : "#64748b",
                       padding: "6px 0",
                     }}
                   >
@@ -1474,12 +1487,17 @@ export default function App() {
                           minHeight: WEEK_BASE_HEIGHT + week.lanes * LANE_GAP,
                         }}
                       >
-                        {week.days.map((day) => {
+                        {week.days.map((day, dayIndex) => {
                           const isToday =
                             day.inMonth &&
                             today.year === calendarYear &&
                             today.month === calendarMonth + 1 &&
                             today.day === day.day;
+
+                          const isSunday = dayIndex === 0;
+                          const isSaturday = dayIndex === 6;
+                          const isHoliday = day.inMonth && KOREAN_HOLIDAYS.has(`${calendarYear}/${calendarMonth + 1}/${day.day}`);
+                          const dayColor = (isSunday || isHoliday) ? "#dc2626" : isSaturday ? "#2563eb" : "#111827";
 
                           const dayCleanings = cleaningsByDateKey.get(day.key) || [];
 
@@ -1501,7 +1519,7 @@ export default function App() {
                             >
                               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", alignItems: "center", gap: 6 }}>
                                 {isToday ? <span style={doneChip}>오늘</span> : null}
-                                <div style={{ fontWeight: 800, fontSize: 14, color: "#111827" }}>{day.day}</div>
+                                <div style={{ fontWeight: 800, fontSize: 14, color: dayColor }}>{day.day}</div>
                               </div>
 
                               <div style={{ position: "absolute", bottom: 8, left: 8, right: 8, display: "grid", gap: 4 }}>
