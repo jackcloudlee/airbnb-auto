@@ -1991,8 +1991,59 @@ export default function App() {
           )}
         </div>
 
-        {/* Reservations + Cleanings */}
+        {/* Cleanings + Reservations */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
+          <div style={cardStyle}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>청소</div>
+              <span style={doneChip}>총 {filteredCleanings.length}건</span>
+            </div>
+
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
+              {["전체", "대기중", "요청완료", "청소완료"].map((s) => {
+                const isActive = cleaningStatusFilter === s;
+                const colorMap = { "대기중": { bg: "#f1f5f9", color: "#475569" }, "요청완료": { bg: "#fef3c7", color: "#92400e" }, "청소완료": { bg: "#dcfce7", color: "#166534" }, "전체": { bg: "#e5e7eb", color: "#374151" } };
+                const c = colorMap[s];
+                return (
+                  <button
+                    key={s}
+                    onClick={() => setCleaningStatusFilter(s)}
+                    style={{
+                      border: isActive ? `2px solid ${c.color}` : "1px solid #d1d5db",
+                      borderRadius: 8,
+                      padding: "6px 12px",
+                      fontSize: 13,
+                      fontWeight: isActive ? 700 : 400,
+                      background: isActive ? c.bg : "#fff",
+                      color: isActive ? c.color : "#475569",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
+            </div>
+
+            {loading ? (
+              <div>불러오는 중...</div>
+            ) : filteredCleanings.length === 0 ? (
+              <div style={{ color: "#64748b" }}>청소 항목이 없습니다.</div>
+            ) : (
+              <div style={{ display: "grid", gap: 10, maxHeight: 720, overflowY: "auto", paddingRight: 4 }}>
+                {filteredCleanings.map((c) => (
+                  <CleaningCard
+                    key={c.id}
+                    c={c}
+                    cleaners={cleaners}
+                    onUpdate={handleCleaningUpdate}
+                    nextCheckin={cleaningNextCheckinMap.get(c.id) || null}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <div style={cardStyle}>
             <div
               onClick={() => setShowReservations((v) => !v)}
@@ -2051,57 +2102,6 @@ export default function App() {
                 })}
               </div>
             ))}
-          </div>
-
-          <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>청소</div>
-              <span style={doneChip}>총 {filteredCleanings.length}건</span>
-            </div>
-
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-              {["전체", "대기중", "요청완료", "청소완료"].map((s) => {
-                const isActive = cleaningStatusFilter === s;
-                const colorMap = { "대기중": { bg: "#f1f5f9", color: "#475569" }, "요청완료": { bg: "#fef3c7", color: "#92400e" }, "청소완료": { bg: "#dcfce7", color: "#166534" }, "전체": { bg: "#e5e7eb", color: "#374151" } };
-                const c = colorMap[s];
-                return (
-                  <button
-                    key={s}
-                    onClick={() => setCleaningStatusFilter(s)}
-                    style={{
-                      border: isActive ? `2px solid ${c.color}` : "1px solid #d1d5db",
-                      borderRadius: 8,
-                      padding: "6px 12px",
-                      fontSize: 13,
-                      fontWeight: isActive ? 700 : 400,
-                      background: isActive ? c.bg : "#fff",
-                      color: isActive ? c.color : "#475569",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {s}
-                  </button>
-                );
-              })}
-            </div>
-
-            {loading ? (
-              <div>불러오는 중...</div>
-            ) : filteredCleanings.length === 0 ? (
-              <div style={{ color: "#64748b" }}>청소 항목이 없습니다.</div>
-            ) : (
-              <div style={{ display: "grid", gap: 10, maxHeight: 720, overflowY: "auto", paddingRight: 4 }}>
-                {filteredCleanings.map((c) => (
-                  <CleaningCard
-                    key={c.id}
-                    c={c}
-                    cleaners={cleaners}
-                    onUpdate={handleCleaningUpdate}
-                    nextCheckin={cleaningNextCheckinMap.get(c.id) || null}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
