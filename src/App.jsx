@@ -920,9 +920,11 @@ function LoginScreen() {
       }}
     >
       <div style={{ ...cardStyle, width: "100%", maxWidth: 420, padding: 36 }}>
-<div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div style={{ fontSize: 40, marginBottom: 8 }}>🏠</div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#1e293b", margin: "0 0 6px" }}>숙소 운영보드</h1>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, #0f172a, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", boxShadow: "0 4px 14px rgba(29,78,216,0.35)" }}>
+            <span style={{ color: "#fff", fontSize: 18, fontWeight: 900, letterSpacing: "0.5px" }}>AH</span>
+          </div>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0f172a", margin: "0 0 6px", letterSpacing: "3px" }}>AIRHOST</h1>
           <p style={{ color: "#64748b", fontSize: 14, margin: 0 }}>로그인하여 계속하세요</p>
         </div>
 
