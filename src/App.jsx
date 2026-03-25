@@ -1452,6 +1452,7 @@ export default function App() {
         guest: formatGuestName(c.guest),
         property: c.property,
         propertyId: c.property_id,
+        cleaner: c.cleaner,
       });
     });
 
@@ -1812,8 +1813,8 @@ export default function App() {
                                     onClick={(e) => { e.stopPropagation(); e.preventDefault(); openCleaningDetail(c.id); }}
                                     style={{
                                       borderRadius: 999,
-                                      background: "#fee2e2",
-                                      color: "#991b1b",
+                                      background: (!c.cleaner || c.cleaner === "미배정") ? "#fee2e2" : "#1e293b",
+                                      color: (!c.cleaner || c.cleaner === "미배정") ? "#dc2626" : "#fff",
                                       fontSize: 12,
                                       fontWeight: 700,
                                       padding: "6px 8px",
@@ -1894,8 +1895,9 @@ export default function App() {
               ) : (
                 <div style={{ display: "grid", gap: 10 }}>
                   {selectedDateItems.map((item) => {
+                    const isUnassigned = !item.cleaner || item.cleaner === "미배정";
                     const colors = item.type === "cleaning"
-                      ? { bg: "#fee2e2", color: "#991b1b" }
+                      ? (isUnassigned ? { bg: "#fee2e2", color: "#dc2626" } : { bg: "#1e293b", color: "#fff" })
                       : propertyMetaById[item.propertyId] || { bg: "#e5e7eb", color: "#374151" };
 
                     return (
