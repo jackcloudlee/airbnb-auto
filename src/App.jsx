@@ -767,6 +767,105 @@ function CleaningCard({ c, cleaners, onUpdate, nextCheckin }) {
   );
 }
 
+// ── CleaningDetailModal ───────────────────────────────────────────────────────
+function CleaningDetailModal({ cleaning, cleaners, onClose, onUpdate }) {
+  const [noteValue, setNoteValue] = useState(cleaning?.note || "");
+  const [savingNote, setSavingNote] = useState(false);
+
+  if (!cleaning) return null;
+
+  const statusColors = {
+    "대기중": { bg: "#f1f5f9", color: "#475569" },
+    "요청완료": { bg: "#fef3c7", color: "#92400e" },
+    "청소완료": { bg: "#dcfce7", color: "#166534" },
+  };
+
+  async function handleCleanerChange(e) {
+    const value = e.target.value;
+    onUpdate(cleaning.id, { cleaner: value });
+    await supabase.from("cleanings").update({ cleaner: value }).eq("id", cleaning.id);
+  }
+
+  async function handleStatusChange(status) {
+    onUpdate(cleaning.id, { status });
+    await supabase.from("cleanings").update({ status }).eq("id", cleaning.id);
+  }
+
+  async function handleNoteSave() {
+    setSavingNote(true);
+    onUpdate(cleaning.id, { note: noteValue });
+    await supabase.from("cleanings").update({ note: noteValue }).eq("id", cleaning.id);
+    setSavingNote(false);
+  }
+
+  return (
+    <div
+      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div style={{ ...cardStyle, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", padding: 28 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <div style={{ fontSize: 22, fontWeight: 800 }}>청소 상세</div>
+          <button onClick={onClose} style={{ ...buttonStyle, padding: "6px 12px", fontSize: 14 }}>닫기</button>
+        </div>
+
+        <div style={{ background: "#f8fafc", borderRadius: 12, padding: 16, marginBottom: 20 }}>
+          {[
+            ["숙소", cleaning.property],
+            ["체크아웃", cleaning.checkout],
+            ["게스트", formatGuestName(cleaning.guest)],
+          ].map(([label, value]) => (
+            <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid #f1f5f9" }}>
+              <span style={{ color: "#64748b", fontSize: 14 }}>{label}</span>
+              <span style={{ fontWeight: 700 }}>{value || "-"}</span>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ fontSize: 13, color: "#64748b", fontWeight: 600, display: "block", marginBottom: 6 }}>담당자</label>
+          <select value={cleaning.cleaner || ""} onChange={handleCleanerChange}
+            style={{ width: "100%", border: "1px solid #d1d5db", borderRadius: 8, padding: "8px 10px", fontSize: 14, background: "#fff" }}>
+            <option value="">미배정</option>
+            {cleaners.map((cl) => (
+              <option key={cl.id} value={cl.name}>{cl.name} {cl.phone ? `(${cl.phone})` : ""}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ fontSize: 13, color: "#64748b", fontWeight: 600, display: "block", marginBottom: 6 }}>상태</label>
+          <div style={{ display: "flex", gap: 6 }}>
+            {CLEANING_STATUSES.map((s) => {
+              const colors = statusColors[s] || { bg: "#e5e7eb", color: "#374151" };
+              const isActive = cleaning.status === s;
+              return (
+                <button key={s} onClick={() => handleStatusChange(s)}
+                  style={{ border: isActive ? `2px solid ${colors.color}` : "1px solid #d1d5db", borderRadius: 8, padding: "6px 12px", fontSize: 13, fontWeight: isActive ? 700 : 400, background: isActive ? colors.bg : "#fff", color: isActive ? colors.color : "#475569", cursor: "pointer" }}>
+                  {s}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <label style={{ fontSize: 13, color: "#64748b", fontWeight: 600, display: "block", marginBottom: 4 }}>메모</label>
+          <textarea value={noteValue} onChange={(e) => setNoteValue(e.target.value)} rows={3}
+            style={{ width: "100%", border: "1px solid #d1d5db", borderRadius: 8, padding: "8px 10px", fontSize: 14, resize: "vertical", boxSizing: "border-box", fontFamily: "inherit" }}
+            placeholder="메모 입력..." />
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
+            <button onClick={handleNoteSave} disabled={savingNote}
+              style={{ ...darkButton, padding: "6px 14px", fontSize: 13, opacity: savingNote ? 0.6 : 1 }}>
+              {savingNote ? "저장 중..." : "메모 저장"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── LoginScreen ───────────────────────────────────────────────────────────────
 function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -960,6 +1059,10 @@ export default function App() {
 
   const [lastSyncAt, setLastSyncAt] = useState(null);
   const [showReservations, setShowReservations] = useState(false);
+
+  // Cleaning detail modal state
+  const [cleaningDetailOpen, setCleaningDetailOpen] = useState(false);
+  const [selectedCleaning, setSelectedCleaning] = useState(null);
 
   // Cleaner modal state
   const [cleanerModalOpen, setCleanerModalOpen] = useState(false);
@@ -1265,6 +1368,7 @@ export default function App() {
     (cleaningsByDateKey.get(selectedDateKey) || []).forEach((c) => {
       items.push({
         key: `clean-${c.id}`,
+        id: c.id,
         type: "cleaning",
         label: "청소",
         guest: formatGuestName(c.guest),
@@ -1333,6 +1437,23 @@ export default function App() {
     closeReservationDetail();
   }
 
+  function openCleaningDetail(cleaningId) {
+    const c = cleanings.find((cl) => cl.id === cleaningId);
+    if (!c) return;
+    setSelectedCleaning(c);
+    setCleaningDetailOpen(true);
+  }
+
+  function closeCleaningDetail() {
+    setCleaningDetailOpen(false);
+    setSelectedCleaning(null);
+  }
+
+  function handleCleaningDetailUpdate(id, patch) {
+    setCleanings((prev) => prev.map((c) => (c.id === id ? { ...c, ...patch } : c)));
+    setSelectedCleaning((prev) => prev?.id === id ? { ...prev, ...patch } : prev);
+  }
+
   // 세션 초기화 중 (깜빡임 방지)
   if (session === undefined) {
     return (
@@ -1368,6 +1489,15 @@ export default function App() {
           reservation={selectedReservation}
           onClose={closeReservationDetail}
           onSaved={handleReservationSaved}
+        />
+      ) : null}
+
+      {cleaningDetailOpen && selectedCleaning ? (
+        <CleaningDetailModal
+          cleaning={selectedCleaning}
+          cleaners={cleaners}
+          onClose={closeCleaningDetail}
+          onUpdate={handleCleaningDetailUpdate}
         />
       ) : null}
 
@@ -1534,6 +1664,7 @@ export default function App() {
                                 {dayCleanings.slice(0, 2).map((c) => (
                                   <div
                                     key={`c-${c.id}`}
+                                    onClick={(e) => { e.stopPropagation(); openCleaningDetail(c.id); }}
                                     style={{
                                       borderRadius: 999,
                                       background: "#fee2e2",
@@ -1544,6 +1675,7 @@ export default function App() {
                                       whiteSpace: "nowrap",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
+                                      cursor: "pointer",
                                     }}
                                   >
                                     청소 · {formatGuestName(c.guest)}
@@ -1621,11 +1753,13 @@ export default function App() {
                     return (
                       <div
                         key={item.key}
+                        onClick={item.type === "cleaning" ? () => openCleaningDetail(item.id) : undefined}
                         style={{
                           border: "1px solid #e5e7eb",
                           borderRadius: 12,
                           background: "#fff",
                           padding: 12,
+                          cursor: item.type === "cleaning" ? "pointer" : "default",
                         }}
                       >
                         <div style={{ marginBottom: 8 }}>
