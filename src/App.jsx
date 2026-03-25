@@ -1669,14 +1669,17 @@ export default function App() {
         {/* Stats - 상단 요약 */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 18 }}>
           <div style={{ ...statCardStyle, borderLeft: "3px solid #3b82f6" }}>
+            <div style={{ color: "#94a3b8", fontSize: 10, fontWeight: 600, marginBottom: 2, letterSpacing: "0.04em" }}>오늘</div>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>체크인</div>
             <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", lineHeight: 1 }}>{stats.todayCheckins}</div>
           </div>
           <div style={{ ...statCardStyle, borderLeft: "3px solid #f59e0b" }}>
+            <div style={{ color: "#94a3b8", fontSize: 10, fontWeight: 600, marginBottom: 2, letterSpacing: "0.04em" }}>오늘</div>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>체크아웃</div>
             <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", lineHeight: 1 }}>{stats.todayCheckouts}</div>
           </div>
           <div style={{ ...statCardStyle, borderLeft: "3px solid #ef4444" }}>
+            <div style={{ color: "#94a3b8", fontSize: 10, fontWeight: 600, marginBottom: 2, letterSpacing: "0.04em" }}>청소</div>
             <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>미배정</div>
             <div style={{ fontSize: 26, fontWeight: 800, color: stats.unassignedCleanings > 0 ? "#dc2626" : "#0f172a", lineHeight: 1 }}>{stats.unassignedCleanings}</div>
           </div>
