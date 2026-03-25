@@ -1117,6 +1117,7 @@ function InstallBanner() {
           추가 →
         </button>
       </div>
+    </>
   );
 }
 
