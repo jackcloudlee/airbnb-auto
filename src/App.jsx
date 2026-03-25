@@ -246,7 +246,6 @@ function overlaps(aStart, aEnd, bStart, bEnd) {
 }
 
 function getReservationBarColor(channel, propertyId, propertyMetaById) {
-  if (channel === "Booking") return BOOKING_META;
   return propertyMetaById[propertyId] || { name: "숙소", bg: "#e5e7eb", color: "#374151" };
 }
 
@@ -1591,8 +1590,6 @@ export default function App() {
                   {selectedDateItems.map((item) => {
                     const colors = item.type === "cleaning"
                       ? { bg: "#fee2e2", color: "#991b1b" }
-                      : item.channel === "Booking"
-                      ? BOOKING_META
                       : propertyMetaById[item.propertyId] || { bg: "#e5e7eb", color: "#374151" };
 
                     return (
@@ -1681,9 +1678,7 @@ export default function App() {
             ) : (
               <div style={{ display: "grid", gap: 10, maxHeight: 720, overflowY: "auto", paddingRight: 4 }}>
                 {filteredReservations.map((r) => {
-                  const propColors = r.channel === "Booking"
-                    ? BOOKING_META
-                    : propertyMetaById[r.property_id] || { bg: "#e5e7eb", color: "#374151" };
+                  const propColors = propertyMetaById[r.property_id] || { bg: "#e5e7eb", color: "#374151" };
                   return (
                     <div
                       key={r.id}
