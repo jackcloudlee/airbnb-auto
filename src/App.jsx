@@ -33,61 +33,66 @@ const BAR_TOP = 40;
 const LANE_GAP = 34;
 
 const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 18,
-  padding: 18,
+  border: "1px solid #e8edf2",
+  borderRadius: 20,
+  padding: 22,
   background: "#fff",
-  boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+  boxShadow: "0 2px 10px rgba(15,23,42,0.06)",
 };
 
 const buttonStyle = {
-  border: "1px solid #d1d5db",
-  borderRadius: 12,
-  padding: "10px 14px",
+  border: "1px solid #e2e8f0",
+  borderRadius: 10,
+  padding: "9px 16px",
   background: "#fff",
   cursor: "pointer",
-  fontSize: 15,
+  fontSize: 14,
+  fontWeight: 500,
+  color: "#374151",
 };
 
 const darkButton = {
   ...buttonStyle,
-  background: "#0f172a",
+  background: "#111827",
   color: "#fff",
-  border: "1px solid #0f172a",
+  border: "1px solid #111827",
+  fontWeight: 600,
 };
 
 const statCardStyle = {
-  ...cardStyle,
-  padding: "10px 14px",
-  minHeight: "auto",
+  border: "1px solid #e8edf2",
+  borderRadius: 16,
+  padding: "16px 20px",
+  background: "#fff",
+  boxShadow: "0 1px 4px rgba(15,23,42,0.05)",
 };
 
 const warningChip = {
   display: "inline-block",
-  fontSize: 12,
-  padding: "6px 8px",
+  fontSize: 11,
+  padding: "4px 10px",
   borderRadius: 999,
-  background: "#fee2e2",
-  color: "#991b1b",
-  fontWeight: 700,
+  background: "#fef2f2",
+  color: "#dc2626",
+  fontWeight: 600,
 };
 
 const doneChip = {
   display: "inline-block",
-  fontSize: 12,
-  padding: "6px 8px",
+  fontSize: 11,
+  padding: "4px 10px",
   borderRadius: 999,
-  background: "#dcfce7",
-  color: "#166534",
-  fontWeight: 700,
+  background: "#f0fdf4",
+  color: "#16a34a",
+  fontWeight: 600,
 };
 
 const infoChipBase = {
   display: "inline-block",
-  fontSize: 12,
-  padding: "6px 8px",
+  fontSize: 11,
+  padding: "4px 10px",
   borderRadius: 999,
-  fontWeight: 700,
+  fontWeight: 600,
 };
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "http://localhost:8787").replace(
@@ -372,7 +377,7 @@ function CleanerModal({ cleaner, onClose, onSaved }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.45)",
+        background: "rgba(15,23,42,0.5)",
         zIndex: 1000,
         display: "flex",
         alignItems: "center",
@@ -543,7 +548,7 @@ function ReservationDetailModal({ reservation, onClose, onSaved }) {
 
   return (
     <div
-      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+      style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div style={{ ...cardStyle, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", padding: 28 }}>
@@ -643,10 +648,11 @@ function CleaningCard({ c, cleaners, onUpdate, nextCheckin }) {
   return (
     <div
       style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: 12,
-        padding: 14,
-        background: "#fafafa",
+        border: "1px solid #e8edf2",
+        borderRadius: 16,
+        padding: 16,
+        background: "#fff",
+        boxShadow: "0 1px 4px rgba(15,23,42,0.04)",
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
@@ -800,7 +806,7 @@ function CleaningDetailModal({ cleaning, cleaners, onClose, onUpdate }) {
 
   return (
     <div
-      style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+      style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div style={{ ...cardStyle, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", padding: 28 }}>
@@ -1479,8 +1485,8 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f3f4f6",
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        background: "#f1f5f9",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif",
         color: "#111827",
       }}
     >
@@ -1510,7 +1516,7 @@ export default function App() {
       ) : null}
 
       {cleanerListOpen ? (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
           <div style={{ ...cardStyle, width: "100%", maxWidth: 480, maxHeight: "85vh", overflowY: "auto", padding: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div style={{ fontSize: 22, fontWeight: 800 }}>담당자 관리</div>
@@ -1547,16 +1553,19 @@ export default function App() {
         </div>
       ) : null}
 
-      <div style={{ maxWidth: 1320, margin: "0 auto", padding: isMobile ? "16px 12px 60px" : "24px 16px 60px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <h1 style={{ fontSize: isMobile ? 24 : 36, fontWeight: 800, color: "#1e293b", margin: 0 }}>🏠 숙소 운영보드</h1>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: isMobile ? "20px 14px 80px" : "28px 20px 80px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, paddingBottom: 16, borderBottom: "1px solid #e8edf2" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "#111827", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🏠</div>
+            <h1 style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#0f172a", margin: 0, letterSpacing: "-0.3px" }}>숙소 운영보드</h1>
+          </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {!isMobile && (
-              <span style={{ color: "#64748b", fontSize: 13 }}>{session.user.email}</span>
+              <span style={{ color: "#94a3b8", fontSize: 13 }}>{session.user.email}</span>
             )}
             <button
               onClick={() => supabase.auth.signOut()}
-              style={{ ...buttonStyle, fontSize: 13, padding: "8px 14px", color: "#991b1b", borderColor: "#fecaca" }}
+              style={{ ...buttonStyle, fontSize: 13, padding: "7px 14px", color: "#64748b" }}
             >
               로그아웃
             </button>
@@ -1564,40 +1573,46 @@ export default function App() {
         </div>
 
         {lastSyncAt && (
-          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 16 }}>
-            🔄 마지막 동기화: {lastSyncAt.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 14, marginTop: 12 }}>
+            마지막 동기화: {lastSyncAt.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
           </div>
         )}
 
         <InstallBanner />
 
         {/* Stats - 상단 요약 */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>오늘 체크인</div>
-            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.todayCheckins}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 18 }}>
+          <div style={{ ...statCardStyle, borderLeft: "3px solid #3b82f6" }}>
+            <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>체크인</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", lineHeight: 1 }}>{stats.todayCheckins}</div>
           </div>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>오늘 체크아웃</div>
-            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.todayCheckouts}</div>
+          <div style={{ ...statCardStyle, borderLeft: "3px solid #f59e0b" }}>
+            <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>체크아웃</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", lineHeight: 1 }}>{stats.todayCheckouts}</div>
           </div>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>청소 미배정</div>
-            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.unassignedCleanings}</div>
+          <div style={{ ...statCardStyle, borderLeft: "3px solid #ef4444" }}>
+            <div style={{ color: "#64748b", fontSize: 11, fontWeight: 600, marginBottom: 6, letterSpacing: "0.04em", textTransform: "uppercase" }}>미배정</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: stats.unassignedCleanings > 0 ? "#dc2626" : "#0f172a", lineHeight: 1 }}>{stats.unassignedCleanings}</div>
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+          <div style={{ display: "flex", background: "#e8edf2", borderRadius: 12, padding: 3, gap: 2 }}>
             {propertyOptions.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setSelectedProperty(p.id)}
                 style={{
-                  ...buttonStyle,
-                  background: selectedProperty === p.id ? "#0f172a" : "#fff",
-                  color: selectedProperty === p.id ? "#fff" : "#111827",
-                  border: selectedProperty === p.id ? "1px solid #0f172a" : "1px solid #d1d5db",
+                  border: "none",
+                  borderRadius: 9,
+                  padding: "7px 16px",
+                  fontSize: 13,
+                  fontWeight: selectedProperty === p.id ? 700 : 500,
+                  background: selectedProperty === p.id ? "#fff" : "transparent",
+                  color: selectedProperty === p.id ? "#111827" : "#64748b",
+                  cursor: "pointer",
+                  boxShadow: selectedProperty === p.id ? "0 1px 4px rgba(0,0,0,0.10)" : "none",
+                  transition: "all 0.15s",
                 }}
               >
                 {p.name}
@@ -1606,7 +1621,7 @@ export default function App() {
           </div>
           <button
             onClick={() => setCleanerListOpen(true)}
-            style={{ ...buttonStyle, display: "flex", alignItems: "center", gap: 6, fontSize: 14 }}
+            style={{ ...buttonStyle, display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}
           >
             👤 담당자
           </button>
@@ -1614,12 +1629,12 @@ export default function App() {
 
         {/* Calendar Card */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <div style={{ fontSize: 28, fontWeight: 700 }}>예약</div>
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <button onClick={goPrevMonth} style={buttonStyle}>{'< 이전'}</button>
-              <div style={{ fontSize: 20, fontWeight: 800, minWidth: 140, textAlign: "center" }}>{monthTitle}</div>
-              <button onClick={goNextMonth} style={buttonStyle}>{'다음 >'}</button>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.2px" }}>예약 캘린더</div>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              <button onClick={goPrevMonth} style={{ ...buttonStyle, padding: "7px 12px", fontSize: 13 }}>{'< 이전'}</button>
+              <div style={{ fontSize: 15, fontWeight: 700, minWidth: 120, textAlign: "center", color: "#0f172a" }}>{monthTitle}</div>
+              <button onClick={goNextMonth} style={{ ...buttonStyle, padding: "7px 12px", fontSize: 13 }}>{'다음 >'}</button>
             </div>
           </div>
 
@@ -1794,9 +1809,9 @@ export default function App() {
               </div>
             </div>
 
-            <div style={{ border: "1px solid #e5e7eb", borderRadius: 16, padding: 16, background: "#fafafa" }}>
-              <div style={{ fontSize: 22, fontWeight: 800, marginBottom: 12 }}>선택한 날짜</div>
-              <div style={{ color: "#64748b", marginBottom: 12 }}>{selectedDateKey}</div>
+            <div style={{ border: "1px solid #e8edf2", borderRadius: 16, padding: 16, background: "#fafafa" }}>
+              <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, color: "#0f172a" }}>선택한 날짜</div>
+              <div style={{ color: "#94a3b8", fontSize: 13, marginBottom: 14 }}>{selectedDateKey}</div>
 
               {selectedDateItems.length === 0 ? (
                 <div style={{ color: "#64748b" }}>선택한 날짜에 일정이 없습니다.</div>
@@ -1851,7 +1866,7 @@ export default function App() {
 
         {/* Today priority */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
-          <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 14 }}>오늘 가장 먼저 볼 것</div>
+          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 14, color: "#0f172a", letterSpacing: "-0.2px" }}>오늘 할 일</div>
 
           {loading ? (
             <div>불러오는 중...</div>
@@ -1863,10 +1878,10 @@ export default function App() {
                 <div
                   key={item.key}
                   style={{
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 12,
-                    padding: 12,
-                    background: "#fafafa",
+                    border: "1px solid #e8edf2",
+                    borderRadius: 14,
+                    padding: "12px 14px",
+                    background: "#fff",
                   }}
                 >
                   <div style={{ marginBottom: 8 }}>
@@ -1887,7 +1902,7 @@ export default function App() {
               onClick={() => setShowReservations((v) => !v)}
               style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: showReservations ? 16 : 0, cursor: "pointer" }}
             >
-              <div style={{ fontSize: 28, fontWeight: 700 }}>예약</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>예약</div>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={doneChip}>총 {filteredReservations.length}건</span>
                 <span style={{ fontSize: 18, color: "#64748b" }}>{showReservations ? "▲" : "▼"}</span>
@@ -1907,15 +1922,15 @@ export default function App() {
                       key={r.id}
                       onClick={() => openReservationDetail(r.id)}
                       style={{
-                        border: "1px solid #e5e7eb",
-                        borderRadius: 12,
-                        padding: 12,
-                        background: "#fafafa",
+                        border: "1px solid #e8edf2",
+                        borderRadius: 14,
+                        padding: "12px 14px",
+                        background: "#fff",
                         cursor: "pointer",
-                        transition: "box-shadow 0.15s",
+                        transition: "box-shadow 0.15s, border-color 0.15s",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+                      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.borderColor = "#cbd5e1"; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "#e8edf2"; }}
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                         <div style={{ fontWeight: 700 }}>{formatGuestName(r.guest)} · {r.property}</div>
@@ -1944,7 +1959,7 @@ export default function App() {
 
           <div style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <div style={{ fontSize: 28, fontWeight: 700 }}>청소</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>청소</div>
               <span style={doneChip}>총 {filteredCleanings.length}건</span>
             </div>
 
