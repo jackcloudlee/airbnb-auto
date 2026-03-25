@@ -1218,6 +1218,9 @@ export default function App() {
       const inParsed = parseMonthDayHourMinute(r.check_in);
       const outParsed = parseMonthDayHourMinute(r.check_out);
 
+      const fmtDate = (p) => p ? `${p.month}월${p.day}일` : "?";
+      const dateRange = `${fmtDate(inParsed)}-${fmtDate(outParsed)}`;
+
       if (inParsed && `${inParsed.month}/${inParsed.day}` === selectedDateKey) {
         items.push({
           key: `in-${r.id}`,
@@ -1227,6 +1230,7 @@ export default function App() {
           property: r.property,
           channel: r.channel,
           propertyId: r.property_id,
+          dateRange,
         });
       }
 
@@ -1239,6 +1243,7 @@ export default function App() {
           property: r.property,
           channel: r.channel,
           propertyId: r.property_id,
+          dateRange,
         });
       }
     });
@@ -1617,13 +1622,9 @@ export default function App() {
                         </div>
                         <div style={{ fontWeight: 700 }}>
                           <span style={dotStyle(colors.bg)} />
-                          {item.guest} · {item.property}
+                          {item.channel || item.guest} · {item.property}
+                          {item.dateRange ? <span style={{ fontWeight: 400, color: "#64748b", fontSize: 13 }}> · {item.dateRange}</span> : null}
                         </div>
-                        {item.channel ? (
-                          <div style={{ marginTop: 8 }}>
-                            <span style={{ ...infoChipBase, background: colors.bg, color: colors.color }}>{item.channel}</span>
-                          </div>
-                        ) : null}
                       </div>
                     );
                   })}
