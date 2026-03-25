@@ -1404,11 +1404,13 @@ export default function App() {
   }
 
   function openAddCleaner() {
+    setCleanerListOpen(false);
     setEditingCleaner(null);
     setCleanerModalOpen(true);
   }
 
   function openEditCleaner(cleaner) {
+    setCleanerListOpen(false);
     setEditingCleaner(cleaner);
     setCleanerModalOpen(true);
   }
