@@ -45,7 +45,8 @@ const darkButton = {
 
 const statCardStyle = {
   ...cardStyle,
-  minHeight: 112,
+  padding: "10px 14px",
+  minHeight: "auto",
 };
 
 const warningChip = {
@@ -1375,6 +1376,22 @@ export default function App() {
 
         <InstallBanner />
 
+        {/* Stats - 상단 요약 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 16 }}>
+          <div style={statCardStyle}>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>오늘 체크인</div>
+            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.todayCheckins}</div>
+          </div>
+          <div style={statCardStyle}>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>오늘 체크아웃</div>
+            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.todayCheckouts}</div>
+          </div>
+          <div style={statCardStyle}>
+            <div style={{ color: "#64748b", fontSize: 11, marginBottom: 4 }}>청소 미배정</div>
+            <div style={{ fontSize: 22, fontWeight: 800 }}>{stats.unassignedCleanings}</div>
+          </div>
+        </div>
+
         {/* Cleaner Management Section */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
@@ -1664,21 +1681,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, 1fr)", gap: 16, marginBottom: 16 }}>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", marginBottom: 8 }}>오늘 체크인</div>
-            <div style={{ fontSize: 32, fontWeight: 800 }}>{stats.todayCheckins}</div>
-          </div>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", marginBottom: 8 }}>오늘 체크아웃</div>
-            <div style={{ fontSize: 32, fontWeight: 800 }}>{stats.todayCheckouts}</div>
-          </div>
-          <div style={statCardStyle}>
-            <div style={{ color: "#64748b", marginBottom: 8 }}>청소 미배정</div>
-            <div style={{ fontSize: 32, fontWeight: 800 }}>{stats.unassignedCleanings}</div>
-          </div>
-        </div>
 
         {/* Today priority */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
