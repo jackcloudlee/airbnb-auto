@@ -1504,7 +1504,13 @@ export default function App() {
                           return (
                             <button
                               key={day.key}
-                              onClick={() => day.inMonth && setSelectedDateKey(day.key)}
+                              onClick={() => {
+                                if (!day.inMonth) {
+                                  setCalendarMonth(day.date.getMonth());
+                                  setCalendarYear(day.date.getFullYear());
+                                }
+                                setSelectedDateKey(day.key);
+                              }}
                               style={{
                                 minHeight: WEEK_BASE_HEIGHT + week.lanes * LANE_GAP,
                                 border: selectedDateKey === day.key ? "2px solid #0f172a" : "1px solid #e5e7eb",
@@ -1513,7 +1519,7 @@ export default function App() {
                                 opacity: day.inMonth ? 1 : 0.55,
                                 padding: 10,
                                 textAlign: "left",
-                                cursor: day.inMonth ? "pointer" : "default",
+                                cursor: "pointer",
                                 position: "relative",
                               }}
                             >
