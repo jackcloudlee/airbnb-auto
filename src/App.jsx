@@ -1662,24 +1662,27 @@ export default function App() {
 
                               <div style={{ position: "absolute", bottom: 8, left: 8, right: 8, display: "grid", gap: 4 }}>
                                 {dayCleanings.slice(0, 2).map((c) => (
-                                  <div
+                                  <button
                                     key={`c-${c.id}`}
-                                    onClick={(e) => { e.stopPropagation(); openCleaningDetail(c.id); }}
+                                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); openCleaningDetail(c.id); }}
                                     style={{
                                       borderRadius: 999,
                                       background: "#fee2e2",
                                       color: "#991b1b",
-                                      fontSize: 11,
+                                      fontSize: 12,
                                       fontWeight: 700,
-                                      padding: "4px 6px",
+                                      padding: "6px 8px",
                                       whiteSpace: "nowrap",
                                       overflow: "hidden",
                                       textOverflow: "ellipsis",
                                       cursor: "pointer",
+                                      border: "none",
+                                      width: "100%",
+                                      textAlign: "left",
                                     }}
                                   >
-                                    청소 · {formatGuestName(c.guest)}
-                                  </div>
+                                    🧹 {formatGuestName(c.guest)}
+                                  </button>
                                 ))}
                                 {dayCleanings.length > 2 ? (
                                   <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700 }}>
