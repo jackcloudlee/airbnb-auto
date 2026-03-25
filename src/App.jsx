@@ -944,9 +944,7 @@ export default function App() {
   const [cleaners, setCleaners] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [syncing, setSyncing] = useState(false);
-  const [syncMessage, setSyncMessage] = useState("");
-  const [syncTone, setSyncTone] = useState("normal");
+  const [lastSyncAt, setLastSyncAt] = useState(null);
 
   // Cleaner modal state
   const [cleanerModalOpen, setCleanerModalOpen] = useState(false);
@@ -1004,33 +1002,17 @@ export default function App() {
       supabase.from("cleaners").select("*").eq("active", true).order("name", { ascending: true }),
     ]);
 
-    if (propertiesError) {
-      setSyncMessage(`숙소 불러오기 실패\n${propertiesError.message}`);
-      setSyncTone("error");
-    } else {
-      setProperties(propertiesData || []);
-    }
+    if (!propertiesError) setProperties(propertiesData || []);
+    if (!reservationsError) setReservations(reservationsData || []);
+    if (!cleaningsError) setCleanings(cleaningsData || []);
+    if (!cleanersError) setCleaners(cleanersData || []);
 
-    if (reservationsError) {
-      setSyncMessage(`예약 불러오기 실패\n${reservationsError.message}`);
-      setSyncTone("error");
-    } else {
-      setReservations(reservationsData || []);
-    }
-
-    if (cleaningsError) {
-      setSyncMessage(`청소 불러오기 실패\n${cleaningsError.message}`);
-      setSyncTone("error");
-    } else {
-      setCleanings(cleaningsData || []);
-    }
-
-    if (cleanersError) {
-      setSyncMessage(`담당자 불러오기 실패\n${cleanersError.message}`);
-      setSyncTone("error");
-    } else {
-      setCleaners(cleanersData || []);
-    }
+    // 마지막 동기화 시간 가져오기
+    try {
+      const res = await fetch(`${API_BASE_URL}/health`);
+      const data = await res.json();
+      if (data.lastSyncAt) setLastSyncAt(new Date(data.lastSyncAt));
+    } catch (_) {}
 
     setLoading(false);
   }
@@ -1068,53 +1050,6 @@ export default function App() {
     setSelectedProperty("all");
   }, [properties, selectedProperty]);
 
-  async function handleSync() {
-    setSyncing(true);
-    setSyncMessage("동기화 요청 중입니다...");
-    setSyncTone("normal");
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/sync-now`, {
-        method: "POST",
-        signal: controller.signal,
-      });
-
-      const json = await response.json();
-
-      if (!response.ok || json.ok === false) {
-        throw new Error(json?.error || "동기화 실패");
-      }
-
-      await loadAll();
-
-      const results = Array.isArray(json.results) ? json.results : [];
-      const summary =
-        results.length > 0
-          ? results
-              .map(
-                (r) =>
-                  `${r.property}: 파싱 ${r.parsed ?? 0}건 / 추가 ${r.inserted ?? 0}건 / 건너뜀 ${r.skipped ?? 0}건`
-              )
-              .join("\n")
-          : "동기화가 완료되었습니다.";
-
-      setSyncMessage(`동기화 완료\n${summary}`);
-      setSyncTone("success");
-    } catch (error) {
-      if (error.name === "AbortError") {
-        setSyncMessage("동기화 시간이 너무 오래 걸립니다.\n서버가 멈췄는지 확인해 주세요.");
-      } else {
-        setSyncMessage(`동기화 실패\n${error.message}`);
-      }
-      setSyncTone("error");
-    } finally {
-      clearTimeout(timeoutId);
-      setSyncing(false);
-    }
-  }
 
   const filteredReservations = useMemo(() => {
     const rows =
@@ -1417,7 +1352,7 @@ export default function App() {
       ) : null}
 
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: isMobile ? "16px 12px 60px" : "24px 16px 60px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <h1 style={{ fontSize: isMobile ? 24 : 36, fontWeight: 800, color: "#1e293b", margin: 0 }}>🏠 숙소 운영보드</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {!isMobile && (
@@ -1432,27 +1367,13 @@ export default function App() {
           </div>
         </div>
 
-        {syncMessage ? <StatusBox text={syncMessage} tone={syncTone} /> : null}
+        {lastSyncAt && (
+          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 16 }}>
+            🔄 마지막 동기화: {lastSyncAt.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+          </div>
+        )}
 
         <InstallBanner />
-
-        {/* iCal Sync Card */}
-        <div style={{ ...cardStyle, marginBottom: 16 }}>
-          <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 16 }}>iCal 자동 연동</div>
-
-          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={handleSync}
-              style={syncing ? { ...buttonStyle, opacity: 0.6, cursor: "default" } : darkButton}
-              disabled={syncing}
-            >
-              {syncing ? "동기화 중..." : "지금 동기화"}
-            </button>
-            <div style={{ color: "#64748b" }}>
-              현재 서버 기준으로 properties 테이블의 활성 숙소를 동기화합니다.
-            </div>
-          </div>
-        </div>
 
         {/* Cleaner Management Section */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>

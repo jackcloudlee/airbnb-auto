@@ -16,6 +16,7 @@ const SYNC_INTERVAL_MINUTES = Number(process.env.SYNC_INTERVAL_MINUTES || 10);
 const SUPABASE_URL = process.env.SUPABASE_URL;
 
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
 const FALLBACK_AIRBNB_ICAL_URL = process.env.AIRBNB_ICAL_URL || "";
 
@@ -35,9 +36,9 @@ async function curlJson(url, method = "GET", body = null, extraHeaders = []) {
     "\n__HTTP_STATUS__:%{http_code}",
     url,
     "-H",
-    `apikey: ${SUPABASE_ANON_KEY}`,
+    `apikey: ${SUPABASE_SERVICE_ROLE_KEY}`,
     "-H",
-    `Authorization: Bearer ${SUPABASE_ANON_KEY}`,
+    `Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
     ...extraHeaders.flatMap((h) => ["-H", h]),
   ];
 
@@ -470,6 +471,33 @@ async function runSync() {
     syncing = false;
   }
 }
+
+// Pulse 앱 열기 리다이렉트 (텔레그램 버튼용)
+app.get("/open-pulse", (_req, res) => {
+  res.send(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pulse 앱 열기...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <script>
+    var tried = false;
+    // bookingpulse:// 스킴 시도
+    window.location = 'bookingpulse://';
+    setTimeout(function() {
+      if (!tried) {
+        tried = true;
+        // 앱스토어로 이동 (앱 설치되어 있으면 "열기" 버튼 표시)
+        window.location = 'https://apps.apple.com/kr/app/id992795726';
+      }
+    }, 1500);
+  </script>
+  <p style="font-family:sans-serif;text-align:center;margin-top:40px;">Pulse 앱을 여는 중...</p>
+</body>
+</html>`);
+});
 
 app.get("/health", (_req, res) => {
   res.json({
