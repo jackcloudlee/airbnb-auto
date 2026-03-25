@@ -1806,32 +1806,41 @@ export default function App() {
                                 <div style={{ fontWeight: 400, fontSize: 14, color: dayColor }}>{day.day}</div>
                               </div>
 
-                              <div style={{ position: "absolute", bottom: 8, left: 8, right: 8, display: "grid", gap: 4 }}>
-                                {dayCleanings.slice(0, 2).map((c) => (
-                                  <button
-                                    key={`c-${c.id}`}
-                                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); openCleaningDetail(c.id); }}
-                                    style={{
-                                      borderRadius: 999,
-                                      background: (!c.cleaner || c.cleaner === "미배정") ? "#fee2e2" : "#1e293b",
-                                      color: (!c.cleaner || c.cleaner === "미배정") ? "#dc2626" : "#fff",
-                                      fontSize: 12,
-                                      fontWeight: 700,
-                                      padding: "6px 8px",
-                                      whiteSpace: "nowrap",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      cursor: "pointer",
-                                      border: "none",
-                                      width: "100%",
-                                      textAlign: "left",
-                                    }}
-                                  >
-                                    🧹 {formatGuestName(c.guest)}
-                                  </button>
-                                ))}
+                              <div style={{ position: "absolute", bottom: 6, left: 6, right: 6, display: "grid", gap: 3 }}>
+                                {dayCleanings.slice(0, 2).map((c) => {
+                                  const unassigned = !c.cleaner || c.cleaner === "미배정";
+                                  return (
+                                    <button
+                                      key={`c-${c.id}`}
+                                      onClick={(e) => { e.stopPropagation(); e.preventDefault(); openCleaningDetail(c.id); }}
+                                      style={{
+                                        borderRadius: 6,
+                                        background: unassigned ? "#ef4444" : "#1e293b",
+                                        color: "#fff",
+                                        fontSize: 11,
+                                        fontWeight: 700,
+                                        padding: "5px 7px",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        cursor: "pointer",
+                                        border: "none",
+                                        width: "100%",
+                                        textAlign: "left",
+                                        height: 24,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 4,
+                                        boxShadow: unassigned ? "0 1px 4px rgba(239,68,68,0.4)" : "0 1px 4px rgba(0,0,0,0.2)",
+                                      }}
+                                    >
+                                      <span style={{ fontSize: 10 }}>🧹</span>
+                                      <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{formatGuestName(c.guest)}</span>
+                                    </button>
+                                  );
+                                })}
                                 {dayCleanings.length > 2 ? (
-                                  <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700 }}>
+                                  <div style={{ fontSize: 10, color: "#64748b", fontWeight: 700, paddingLeft: 4 }}>
                                     +{dayCleanings.length - 2}건
                                   </div>
                                 ) : null}
