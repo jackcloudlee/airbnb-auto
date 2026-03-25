@@ -1525,7 +1525,7 @@ export default function App() {
                             >
                               <div style={{ position: "absolute", top: 10, right: 10, display: "flex", alignItems: "center", gap: 6 }}>
                                 {isToday ? <span style={doneChip}>오늘</span> : null}
-                                <div style={{ fontWeight: 800, fontSize: 14, color: dayColor }}>{day.day}</div>
+                                <div style={{ fontWeight: 400, fontSize: 14, color: dayColor }}>{day.day}</div>
                               </div>
 
                               <div style={{ position: "absolute", bottom: 8, left: 8, right: 8, display: "grid", gap: 4 }}>
