@@ -130,6 +130,13 @@ function formatGuestName(name) {
   return name;
 }
 
+function shortGuestName(name) {
+  if (!name) return "미확인";
+  if (name === "Reserved") return "Airbnb";
+  // 첫 번째 단어(이름)만 반환
+  return name.split(/\s+/)[0];
+}
+
 function parseMonthDayHourMinute(value) {
   if (!value || typeof value !== "string") return null;
   const m = value.match(/^(\d{1,2})\/(\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?/);
@@ -1837,7 +1844,7 @@ export default function App() {
                                       }}
                                     >
                                       <span style={{ fontSize: 10 }}>🧹</span>
-                                      <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{formatGuestName(c.guest)}</span>
+                                      <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{shortGuestName(c.guest)}</span>
                                     </button>
                                   );
                                 })}
