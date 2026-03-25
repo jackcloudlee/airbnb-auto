@@ -1414,9 +1414,9 @@ export default function App() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
             <div style={{ fontSize: 28, fontWeight: 700 }}>예약</div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <button onClick={goPrevMonth} style={buttonStyle}>>이전</button>
+              <button onClick={goPrevMonth} style={buttonStyle}>{'< 이전'}</button>
               <div style={{ fontSize: 20, fontWeight: 800, minWidth: 140, textAlign: "center" }}>{monthTitle}</div>
-              <button onClick={goNextMonth} style={buttonStyle}>>다음</button>
+              <button onClick={goNextMonth} style={buttonStyle}>{'다음 >'}</button>
             </div>
           </div>
 
