@@ -1555,9 +1555,16 @@ export default function App() {
 
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: isMobile ? "20px 14px 80px" : "28px 20px 80px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6, paddingBottom: 16, borderBottom: "1px solid #e8edf2" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: "#111827", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🏠</div>
-            <h1 style={{ fontSize: isMobile ? 18 : 22, fontWeight: 700, color: "#0f172a", margin: 0, letterSpacing: "-0.3px" }}>숙소 운영보드</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{
+              width: 38, height: 38, borderRadius: 11,
+              background: "linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              boxShadow: "0 3px 10px rgba(29,78,216,0.35)",
+            }}>
+              <span style={{ color: "#fff", fontSize: 13, fontWeight: 900, letterSpacing: "0.5px" }}>AH</span>
+            </div>
+            <h1 style={{ fontSize: isMobile ? 20 : 22, fontWeight: 900, color: "#0f172a", margin: 0, letterSpacing: "3px" }}>AIRHOST</h1>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {!isMobile && (
