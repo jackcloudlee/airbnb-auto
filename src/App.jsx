@@ -1412,11 +1412,11 @@ export default function App() {
         {/* Calendar Card */}
         <div style={{ ...cardStyle, marginBottom: 16 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-            <div style={{ fontSize: 28, fontWeight: 700 }}>예약 달력</div>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>예약</div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <button onClick={goPrevMonth} style={buttonStyle}>이전달</button>
+              <button onClick={goPrevMonth} style={buttonStyle}>>이전</button>
               <div style={{ fontSize: 20, fontWeight: 800, minWidth: 140, textAlign: "center" }}>{monthTitle}</div>
-              <button onClick={goNextMonth} style={buttonStyle}>다음달</button>
+              <button onClick={goNextMonth} style={buttonStyle}>>다음</button>
             </div>
           </div>
 
