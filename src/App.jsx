@@ -959,6 +959,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   const [lastSyncAt, setLastSyncAt] = useState(null);
+  const [showReservations, setShowReservations] = useState(false);
 
   // Cleaner modal state
   const [cleanerModalOpen, setCleanerModalOpen] = useState(false);
@@ -1691,12 +1692,18 @@ export default function App() {
         {/* Reservations + Cleanings */}
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
           <div style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div
+              onClick={() => setShowReservations((v) => !v)}
+              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: showReservations ? 16 : 0, cursor: "pointer" }}
+            >
               <div style={{ fontSize: 28, fontWeight: 700 }}>예약</div>
-              <span style={doneChip}>총 {filteredReservations.length}건</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={doneChip}>총 {filteredReservations.length}건</span>
+                <span style={{ fontSize: 18, color: "#64748b" }}>{showReservations ? "▲" : "▼"}</span>
+              </div>
             </div>
 
-            {loading ? (
+            {showReservations && (loading ? (
               <div>불러오는 중...</div>
             ) : filteredReservations.length === 0 ? (
               <div style={{ color: "#64748b" }}>예약이 없습니다.</div>
@@ -1741,7 +1748,7 @@ export default function App() {
                   );
                 })}
               </div>
-            )}
+            ))}
           </div>
 
           <div style={cardStyle}>
