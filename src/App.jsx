@@ -264,7 +264,8 @@ function getReservationBarColor(channel, propertyId, propertyMetaById) {
 
 function getBarLabel(bar, propertyMetaById) {
   const propertyName = propertyMetaById[bar.propertyId]?.name || bar.property || "숙소";
-  return `${propertyName} · ${bar.guest}`;
+  const guest = (bar.guest || "").replace(/ ?예약$/, "");
+  return `${propertyName} · ${guest}`;
 }
 
 function dotStyle(bg) {
