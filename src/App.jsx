@@ -1392,54 +1392,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Cleaner Management Section */}
-        <div style={{ ...cardStyle, marginBottom: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div style={{ fontSize: 28, fontWeight: 700 }}>담당자 관리</div>
-            <button onClick={openAddCleaner} style={darkButton}>
-              + 담당자 추가
-            </button>
-          </div>
-
-          {loading ? (
-            <div style={{ color: "#64748b" }}>불러오는 중...</div>
-          ) : cleaners.length === 0 ? (
-            <div style={{ color: "#64748b" }}>등록된 담당자가 없습니다.</div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
-              {cleaners.map((cl) => (
-                <button
-                  key={cl.id}
-                  onClick={() => openEditCleaner(cl)}
-                  style={{
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 12,
-                    padding: "14px 16px",
-                    background: "#fafafa",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "box-shadow 0.15s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                >
-                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6, color: "#111827" }}>
-                    {cl.name}
-                  </div>
-                  <div style={{ color: "#64748b", fontSize: 14 }}>
-                    {cl.phone || "전화번호 미등록"}
-                  </div>
-                  {cl.bank ? (
-                    <div style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
-                      {cl.bank}
-                    </div>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
           {propertyOptions.map((p) => (
             <button
@@ -1821,6 +1773,53 @@ export default function App() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Cleaner Management Section */}
+        <div style={{ ...cardStyle, marginTop: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: 28, fontWeight: 700 }}>담당자 관리</div>
+            <button onClick={openAddCleaner} style={darkButton}>
+              + 담당자 추가
+            </button>
+          </div>
+          {loading ? (
+            <div style={{ color: "#64748b" }}>불러오는 중...</div>
+          ) : cleaners.length === 0 ? (
+            <div style={{ color: "#64748b" }}>등록된 담당자가 없습니다.</div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+              {cleaners.map((cl) => (
+                <button
+                  key={cl.id}
+                  onClick={() => openEditCleaner(cl)}
+                  style={{
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 12,
+                    padding: "14px 16px",
+                    background: "#fafafa",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "box-shadow 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
+                >
+                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6, color: "#111827" }}>
+                    {cl.name}
+                  </div>
+                  <div style={{ color: "#64748b", fontSize: 14 }}>
+                    {cl.phone || "전화번호 미등록"}
+                  </div>
+                  {cl.bank ? (
+                    <div style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
+                      {cl.bank}
+                    </div>
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
