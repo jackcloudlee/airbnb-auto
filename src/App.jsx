@@ -1064,6 +1064,9 @@ export default function App() {
   const [cleaningDetailOpen, setCleaningDetailOpen] = useState(false);
   const [selectedCleaning, setSelectedCleaning] = useState(null);
 
+  // Cleaner list popup state
+  const [cleanerListOpen, setCleanerListOpen] = useState(false);
+
   // Cleaner modal state
   const [cleanerModalOpen, setCleanerModalOpen] = useState(false);
   const [editingCleaner, setEditingCleaner] = useState(null);
@@ -1413,11 +1416,14 @@ export default function App() {
   function closeCleanerModal() {
     setCleanerModalOpen(false);
     setEditingCleaner(null);
+    setCleanerListOpen(true);
   }
 
   async function handleCleanerSaved() {
-    closeCleanerModal();
+    setCleanerModalOpen(false);
+    setEditingCleaner(null);
     await loadCleaners();
+    setCleanerListOpen(true);
   }
 
   function openReservationDetail(reservationId) {
@@ -1501,6 +1507,44 @@ export default function App() {
         />
       ) : null}
 
+      {cleanerListOpen ? (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div style={{ ...cardStyle, width: "100%", maxWidth: 480, maxHeight: "85vh", overflowY: "auto", padding: 28 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <div style={{ fontSize: 22, fontWeight: 800 }}>담당자 관리</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  onClick={() => { openAddCleaner(); }}
+                  style={darkButton}
+                >
+                  + 추가
+                </button>
+                <button onClick={() => setCleanerListOpen(false)} style={{ ...buttonStyle, padding: "6px 12px", fontSize: 14 }}>닫기</button>
+              </div>
+            </div>
+            {loading ? (
+              <div style={{ color: "#64748b" }}>불러오는 중...</div>
+            ) : cleaners.length === 0 ? (
+              <div style={{ color: "#64748b" }}>등록된 담당자가 없습니다.</div>
+            ) : (
+              <div style={{ display: "grid", gap: 10 }}>
+                {cleaners.map((cl) => (
+                  <button
+                    key={cl.id}
+                    onClick={() => openEditCleaner(cl)}
+                    style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: "14px 16px", background: "#fafafa", cursor: "pointer", textAlign: "left", width: "100%" }}
+                  >
+                    <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 4, color: "#111827" }}>{cl.name}</div>
+                    <div style={{ color: "#64748b", fontSize: 14 }}>{cl.phone || "전화번호 미등록"}</div>
+                    {cl.bank ? <div style={{ color: "#94a3b8", fontSize: 13, marginTop: 2 }}>{cl.bank}</div> : null}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
+
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: isMobile ? "16px 12px 60px" : "24px 16px 60px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <h1 style={{ fontSize: isMobile ? 24 : 36, fontWeight: 800, color: "#1e293b", margin: 0 }}>🏠 숙소 운영보드</h1>
@@ -1541,21 +1585,29 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-          {propertyOptions.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setSelectedProperty(p.id)}
-              style={{
-                ...buttonStyle,
-                background: selectedProperty === p.id ? "#0f172a" : "#fff",
-                color: selectedProperty === p.id ? "#fff" : "#111827",
-                border: selectedProperty === p.id ? "1px solid #0f172a" : "1px solid #d1d5db",
-              }}
-            >
-              {p.name}
-            </button>
-          ))}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {propertyOptions.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setSelectedProperty(p.id)}
+                style={{
+                  ...buttonStyle,
+                  background: selectedProperty === p.id ? "#0f172a" : "#fff",
+                  color: selectedProperty === p.id ? "#fff" : "#111827",
+                  border: selectedProperty === p.id ? "1px solid #0f172a" : "1px solid #d1d5db",
+                }}
+              >
+                {p.name}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setCleanerListOpen(true)}
+            style={{ ...buttonStyle, display: "flex", alignItems: "center", gap: 6, fontSize: 14 }}
+          >
+            👤 담당자
+          </button>
         </div>
 
         {/* Calendar Card */}
@@ -1940,52 +1992,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Cleaner Management Section */}
-        <div style={{ ...cardStyle, marginTop: 16 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div style={{ fontSize: 28, fontWeight: 700 }}>담당자 관리</div>
-            <button onClick={openAddCleaner} style={darkButton}>
-              + 담당자 추가
-            </button>
-          </div>
-          {loading ? (
-            <div style={{ color: "#64748b" }}>불러오는 중...</div>
-          ) : cleaners.length === 0 ? (
-            <div style={{ color: "#64748b" }}>등록된 담당자가 없습니다.</div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
-              {cleaners.map((cl) => (
-                <button
-                  key={cl.id}
-                  onClick={() => openEditCleaner(cl)}
-                  style={{
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 12,
-                    padding: "14px 16px",
-                    background: "#fafafa",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "box-shadow 0.15s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                >
-                  <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6, color: "#111827" }}>
-                    {cl.name}
-                  </div>
-                  <div style={{ color: "#64748b", fontSize: 14 }}>
-                    {cl.phone || "전화번호 미등록"}
-                  </div>
-                  {cl.bank ? (
-                    <div style={{ color: "#94a3b8", fontSize: 13, marginTop: 4 }}>
-                      {cl.bank}
-                    </div>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
