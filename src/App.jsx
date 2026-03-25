@@ -992,9 +992,10 @@ function LoginScreen() {
 // ── InstallBanner ─────────────────────────────────────────────────────────────
 function InstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [dismissed, setDismissed] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const isInstalled = window.matchMedia("(display-mode: standalone)").matches
     || window.navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 
   useEffect(() => {
     const handler = (e) => { e.preventDefault(); setDeferredPrompt(e); };
@@ -1002,53 +1003,120 @@ function InstallBanner() {
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
-  if (isInstalled || dismissed) return null;
-
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isInstalled) return null;
 
   function handleInstall() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => setDeferredPrompt(null));
+    } else {
+      setShowGuide(true);
     }
   }
 
-  function handleDismiss() {
-    setDismissed(true);
-  }
-
   return (
-    <div style={{
-      background: "#0f172a", color: "#fff",
-      borderRadius: 12, padding: "12px 16px",
-      marginBottom: 16, display: "flex",
-      alignItems: "center", justifyContent: "space-between", gap: 12,
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ fontSize: 24 }}>📲</span>
-        <div>
-          <div style={{ fontWeight: 700, fontSize: 14 }}>홈 화면에 앱 추가</div>
-          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 2 }}>
-            {isIOS
-              ? "Safari 하단 공유(↑) → 홈 화면에 추가"
-              : "설치하면 앱처럼 바로 실행할 수 있어요"}
+    <>
+      {showGuide && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.6)", zIndex: 2000, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: "0 0 32px 0" }}>
+          <div style={{ background: "#fff", borderRadius: 24, width: "100%", maxWidth: 420, margin: "0 16px", overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.25)" }}>
+            {/* Header */}
+            <div style={{ background: "linear-gradient(135deg, #0f172a, #1d4ed8)", padding: "24px 24px 20px", color: "#fff" }}>
+              <div style={{ fontSize: 13, fontWeight: 600, opacity: 0.7, marginBottom: 6, letterSpacing: "1px" }}>3단계로 완료</div>
+              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.3px" }}>홈화면에 AIRHOST 추가</div>
+            </div>
+
+            {/* Steps */}
+            <div style={{ padding: "20px 24px 8px" }}>
+              {[
+                {
+                  num: "1",
+                  icon: "⬆️",
+                  title: "하단 공유 버튼 탭",
+                  desc: "Safari 주소창 아래 가운데 있는 □↑ 버튼",
+                  color: "#dbeafe",
+                  textColor: "#1d4ed8",
+                },
+                {
+                  num: "2",
+                  icon: "➕",
+                  title: '"홈 화면에 추가" 선택',
+                  desc: '공유 메뉴를 아래로 스크롤해서 찾기',
+                  color: "#ede9fe",
+                  textColor: "#6d28d9",
+                },
+                {
+                  num: "3",
+                  icon: "✅",
+                  title: "오른쪽 상단 추가 탭",
+                  desc: '이름이 "AIRHOST"인지 확인 후 추가',
+                  color: "#dcfce7",
+                  textColor: "#16a34a",
+                },
+              ].map((step) => (
+                <div key={step.num} style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 18 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 12, background: step.color, color: step.textColor, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
+                    {step.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", marginBottom: 2 }}>{step.title}</div>
+                    <div style={{ fontSize: 13, color: "#64748b" }}>{step.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Safari bar mockup hint */}
+            <div style={{ margin: "0 24px 20px", background: "#f1f5f9", borderRadius: 14, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ fontSize: 12, color: "#64748b", fontWeight: 500 }}>Safari 하단 툴바</div>
+              <div style={{ display: "flex", gap: 16, fontSize: 18 }}>
+                <span style={{ opacity: 0.3 }}>←</span>
+                <span style={{ opacity: 0.3 }}>→</span>
+                <span style={{ fontSize: 20, fontWeight: 900, color: "#1d4ed8" }}>⬆</span>
+                <span style={{ opacity: 0.3 }}>⊞</span>
+                <span style={{ opacity: 0.3 }}>⊙</span>
+              </div>
+            </div>
+
+            <div style={{ padding: "0 24px 24px" }}>
+              <button
+                onClick={() => setShowGuide(false)}
+                style={{ width: "100%", background: "#0f172a", color: "#fff", border: "none", borderRadius: 14, padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer" }}
+              >
+                확인했어요
+              </button>
+            </div>
           </div>
         </div>
+      )}
+
+      <div style={{
+        background: "linear-gradient(135deg, #0f172a, #1e3a8a)",
+        color: "#fff",
+        borderRadius: 16,
+        padding: "14px 18px",
+        marginBottom: 16,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        boxShadow: "0 4px 14px rgba(15,23,42,0.2)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #0f172a, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", border: "1.5px solid rgba(255,255,255,0.2)", boxShadow: "0 2px 8px rgba(29,78,216,0.4)" }}>
+            <span style={{ color: "#fff", fontSize: 12, fontWeight: 900 }}>AH</span>
+          </div>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 14 }}>홈화면에 추가하기</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", marginTop: 1 }}>앱처럼 바로 실행할 수 있어요</div>
+          </div>
+        </div>
+        <button
+          onClick={handleInstall}
+          style={{ background: "#fff", color: "#0f172a", border: "none", borderRadius: 10, padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}
+        >
+          추가 →
+        </button>
       </div>
-      <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-        {!isIOS && deferredPrompt && (
-          <button onClick={handleInstall} style={{
-            background: "#3b82f6", color: "#fff", border: "none",
-            borderRadius: 8, padding: "8px 14px", fontSize: 13,
-            fontWeight: 600, cursor: "pointer",
-          }}>설치</button>
-        )}
-        <button onClick={handleDismiss} style={{
-          background: "transparent", color: "#94a3b8", border: "1px solid #334155",
-          borderRadius: 8, padding: "8px 12px", fontSize: 13, cursor: "pointer",
-        }}>닫기</button>
-      </div>
-    </div>
   );
 }
 
