@@ -1878,7 +1878,7 @@ export default function App() {
                               background: colors.bg,
                               color: colors.color,
                               fontSize: 12,
-                              fontWeight: 700,
+                              fontWeight: 400,
                               display: "flex",
                               alignItems: "center",
                               padding: "0 12px",
